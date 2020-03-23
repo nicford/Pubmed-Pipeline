@@ -14,6 +14,7 @@ from pyspark.sql.functions import rank, max, sum, desc, lit
 from sklearn import *
 import pickle
 import datetime
+import subprocess
 
 
 
@@ -29,6 +30,7 @@ class PubmedPipeline:
         self.SPARK_CONTEXT = SPARK_CONTEXT
 
         self.pipeline = joblib.load(self.pipelinePath)
+
 
     
     def parseXMLToDF(self, xmlFiles, numSlices):
@@ -104,6 +106,11 @@ class PubmedPipelineSetup(PubmedPipeline):
         super().__init__(SPARK, XMLFilesOutputPath, pipelinePath, numslices, lastRunPicklePath)
         self.mainDataframeOutputPath = mainDataframeOutputPath
 
+    
+    def downloadXmlFromPubmed(self, xmlOutputPath, searchQuery, apiKey):
+
+        subprocess.call(["./setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)])
+
 
     def runPipeline(self):
         dataframe = self.parseXMLToDF(self.XMLFilesOutputPath, self.numSlices)
@@ -125,6 +132,17 @@ class PubmedPipelineUpdate(PubmedPipeline):
         self.mainDataframe = self.SPARK_CONTEXT.read.parquet(mainDataframePath)
         self.mainDataframePath = mainDataframePath
         self.newAndUpdatedPapersDataframeOutputPath = newAndUpdatedPapersDataframeOutputPath
+
+    
+    def downloadXmlFromPubmed(self, xmlOutputPath, searchQuery, apiKey, lastRunDatePicklePath):
+
+        lastRunDate = pickle.load( open(lastRunDatePicklePath, "rb") )
+
+        today = datetime.date.today()
+
+        reldate = (today - lastRunDate).days
+
+        subprocess.call(["./updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)])
 
     
     def runPipeline(self):
