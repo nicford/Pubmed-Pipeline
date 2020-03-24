@@ -15,14 +15,15 @@ from sklearn import *
 import pickle
 import datetime
 import subprocess
+from subprocess import Popen, PIPE
 
 
 
 
 class PubmedPipeline:
 
-    def __init__(self, SPARK_CONTEXT, XMLFilesOutputPath, pipelinePath, numSlices, lastRunPicklePath):
-        self.XMLFilesOutputPath = glob(XMLFilesOutputPath)
+    def __init__(self, SPARK_CONTEXT, XMLFilesPath, pipelinePath, numSlices, lastRunPicklePath):
+        self.XMLFilesOutputPath = os.path.dirname(XMLFilesPath) if os.path.isfile(XMLFilesPath) else XMLFilesPath
         self.pipelinePath = pipelinePath
         self.numSlices = numSlices
         self.lastRunPicklePath = lastRunPicklePath
@@ -34,7 +35,7 @@ class PubmedPipeline:
 
     
     def parseXMLToDF(self, xmlFiles, numSlices):
-        medline_files_rdd = self.SPARK_CONTEXT.sparkContext.parallelize(xmlFiles, numSlices)
+        medline_files_rdd = self.SPARK_CONTEXT.sparkContext.parallelize(glob(xmlFiles + "/*.xml"), numSlices)
 
         parse_results_rdd = medline_files_rdd.\
         flatMap(lambda x: [Row(file_name=os.path.basename(x), **publication_dict) 
@@ -107,9 +108,12 @@ class PubmedPipelineSetup(PubmedPipeline):
         self.mainDataframeOutputPath = mainDataframeOutputPath
 
     
-    def downloadXmlFromPubmed(self, xmlOutputPath, searchQuery, apiKey):
+    def downloadXmlFromPubmed(self, searchQuery, apiKey, xmlOutputPath=None):
 
-        subprocess.call(["./setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)])
+        if xmlOutputPath is None:
+            xmlOutputPath = self.XMLFilesOutputPath
+
+        subprocess.call(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)])
 
 
     def runPipeline(self):
@@ -127,14 +131,18 @@ class PubmedPipelineSetup(PubmedPipeline):
 
 class PubmedPipelineUpdate(PubmedPipeline):
 
-    def __init__(self, SPARK, XMLFilesOutputPath, pipelinePath, mainDataframePath, numslices, lastRunPicklePath, newAndUpdatedPapersDataframeOutputPath):
-        super().__init__(SPARK, XMLFilesOutputPath, pipelinePath, numslices, lastRunPicklePath)
+    def __init__(self, SPARK, XMLFilesPath, pipelinePath, mainDataframePath, numslices, lastRunPicklePath, newAndUpdatedPapersDataframeOutputPath):
+        super().__init__(SPARK, XMLFilesPath, pipelinePath, numslices, lastRunPicklePath)
         self.mainDataframe = self.SPARK_CONTEXT.read.parquet(mainDataframePath)
         self.mainDataframePath = mainDataframePath
         self.newAndUpdatedPapersDataframeOutputPath = newAndUpdatedPapersDataframeOutputPath
+        print("update init finished")
 
     
-    def downloadXmlFromPubmed(self, xmlOutputPath, searchQuery, apiKey, lastRunDatePicklePath):
+    def downloadXmlFromPubmed(self, searchQuery, apiKey, lastRunDatePicklePath, xmlOutputPath=None):
+
+        if xmlOutputPath is None:
+            xmlOutputPath = self.XMLFilesOutputPath
 
         lastRunDate = pickle.load( open(lastRunDatePicklePath, "rb") )
 
@@ -142,7 +150,7 @@ class PubmedPipelineUpdate(PubmedPipeline):
 
         reldate = (today - lastRunDate).days
 
-        subprocess.call(["./updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)])
+        subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)]
 
     
     def runPipeline(self):
