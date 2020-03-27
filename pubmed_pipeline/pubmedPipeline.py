@@ -121,15 +121,6 @@ class PubmedPipelineSetup(PubmedPipeline):
 
         subprocess.call(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)])
 
-        # process = subprocess.Popen(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)], stdout=PIPE, stderr=PIPE)
-        # p = subprocess.Popen(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # while(True):
-        #     # returns None while subprocess is running
-        #     retcode = p.poll() 
-        #     line = p.stdout.readline()
-        #     print(line)
-        #     if retcode is not None:
-        #         break
 
 
     def runPipeline(self):
@@ -184,8 +175,7 @@ class PubmedPipelineUpdate(PubmedPipeline):
         print("update: XMLFilesOutputPath: " + self.XMLFilesOutputPath)
         df = self.parseXMLToDF(self.XMLFilesOutputPath, self.numSlices)
         
-        # df = df.repartition(8)
-        # print("Total new papers to filter: " + str(df.count()))
+
         
         # clean
         df = self.cleanDataframe(df)
