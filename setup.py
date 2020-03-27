@@ -21,7 +21,7 @@ setuptools.setup(
     classifiers=[
         'Programming Language :: Python :: 3',
         'Intended Audience :: Developers',
-        'Operating System :: OS Independent',
+        "Intended Audience :: Science/Research"
     ],
     python_requires='>=3',
 )
