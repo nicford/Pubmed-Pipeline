@@ -35,6 +35,8 @@ class PubmedPipeline:
 
     
     def parseXMLToDF(self, xmlFiles, numSlices):
+        print("parsing xml to df")
+        print(self.XMLFilesOutputPath)
         medline_files_rdd = self.SPARK_CONTEXT.sparkContext.parallelize(glob(xmlFiles + "/*.xml"), numSlices)
 
         parse_results_rdd = medline_files_rdd.\
@@ -96,8 +98,8 @@ class PubmedPipeline:
     def saveLastRunDate(self):
         today = datetime.date.today()
         pickle.dump(today, open(self.lastRunPicklePath, "wb"))
-  
-  
+
+
 
 
 
@@ -110,16 +112,35 @@ class PubmedPipelineSetup(PubmedPipeline):
     
     def downloadXmlFromPubmed(self, searchQuery, apiKey, xmlOutputPath=None):
 
+        print("starting setup xml download")
+
         if xmlOutputPath is None:
             xmlOutputPath = self.XMLFilesOutputPath
 
+        print("setup: xmlpath: " + xmlOutputPath)
+
         subprocess.call(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)])
+
+        # process = subprocess.Popen(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)], stdout=PIPE, stderr=PIPE)
+        # p = subprocess.Popen(["setupPipeline.sh", xmlOutputPath, searchQuery, str(apiKey)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # while(True):
+        #     # returns None while subprocess is running
+        #     retcode = p.poll() 
+        #     line = p.stdout.readline()
+        #     print(line)
+        #     if retcode is not None:
+        #         break
 
 
     def runPipeline(self):
         dataframe = self.parseXMLToDF(self.XMLFilesOutputPath, self.numSlices)
+        print("dataframe count before classifier: " + str(dataframe.count()))
         dataframe = self.cleanDataframe(dataframe)
         dataframe = self.applyClassifier(dataframe)
+
+        print("dataframe count after classifier: " + str(dataframe.count()))
+
+        print("writing to parquet")
 
         dataframe.write.parquet(self.mainDataframeOutputPath, mode="overwrite")
 
@@ -144,17 +165,23 @@ class PubmedPipelineUpdate(PubmedPipeline):
         if xmlOutputPath is None:
             xmlOutputPath = self.XMLFilesOutputPath
 
+        print("update: xml path:" + xmlOutputPath)
+
         lastRunDate = pickle.load( open(lastRunDatePicklePath, "rb") )
 
         today = datetime.date.today()
 
         reldate = (today - lastRunDate).days
 
-        subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)]
+        if reldate < 1:
+            raise Exception("Days since last pipeline run is less than 1. Pipeline runs must occur at least one day apart")
+
+        subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)])
 
     
     def runPipeline(self):
         # parse xml files into dataframe
+        print("update: XMLFilesOutputPath: " + self.XMLFilesOutputPath)
         df = self.parseXMLToDF(self.XMLFilesOutputPath, self.numSlices)
         
         # df = df.repartition(8)
@@ -182,6 +209,8 @@ class PubmedPipelineUpdate(PubmedPipeline):
         
         # write updated dataframe to parquet
         filteredDF.write.parquet(self.newAndUpdatedPapersDataframeOutputPath, mode='overwrite')
+
+        self.saveLastRunDate()
 
 
 

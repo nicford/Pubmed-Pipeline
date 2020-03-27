@@ -1,4 +1,3 @@
-%sh
 #!/bin/bash
 
 # install required libraries
@@ -44,6 +43,7 @@ count=$(echo $data | xmlstarlet sel -t -v "/eSearchResult/Count")
 numberOfResults=$(($count / 10000))
 
 
+
 efetchUrl="${base}efetch.fcgi?db=$db&query_key=$key&WebEnv=$webEnv&api_key=$apiKey&retmode=$retmode"
 
 startPaperDownload () {
@@ -56,10 +56,11 @@ startPaperDownload () {
 export -f startPaperDownload
 
 parallel --retries 3 --delay 0.2 --joblog logs/downloadPapersJobLog.txt -j10 startPaperDownload ::: $efetchUrl ::: $(seq 0 ${numberOfResults})
-
+echo 11111111111
 # check for download failures in joblog file and keep retrying failed downloads until there are none
 while [[ $? -ne 0 ]]
 do
+echo "setup: in while loop"
 parallel -j8 --delay 0.2 --retry-failed --joblog logs/downloadPapersJobLog.txt
 done
 
