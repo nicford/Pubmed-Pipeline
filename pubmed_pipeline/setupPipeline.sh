@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# E-utilities documentation: https://www.ncbi.nlm.nih.gov/books/NBK25501/
+
 # make logs directory and file
 mkdir ./logs
 touch ./logs/downloadPapersJobLog.txt
