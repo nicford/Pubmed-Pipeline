@@ -1,2 +1,0 @@
-Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	Command
-1	:	1585084749.230	     4.236	0	0	0	0	startPaperDownload 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&query_key=3&webenv=NCID_1_2340395_130.14.22.33_9001_1585084747_1843876201_0MetA0_S_MegaStore&api_key=33815fb609026f79413b258a4c3e91a2f408&retmode=xml' 0

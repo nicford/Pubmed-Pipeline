@@ -73,7 +73,6 @@ class PubmedPipeline:
         dataframe = dataframe.withColumn('pmid', dataframe['pmid'].cast(IntegerType()))
         return dataframe
   
-
   
 
     def propagate_udf(self, *args):
@@ -167,7 +166,7 @@ class PubmedPipelineSetup(PubmedPipeline):
         Download papers in XML format from pubmed
 
         Args:
-            searchQuery: the term(s) to search for the papers on pubmed
+            searchQueries: the term(s) to search for the papers on pubmed
             apiKey: API key from pubmed to allow increased rate of requests, to avoid HTTP 429 error
                     (see E-utilites website for how to get a key)
             xmlOutputPath: optional parameter, sets path to store downloaded xml papers
@@ -222,7 +221,9 @@ class PubmedPipelineUpdate(PubmedPipeline):
             lastRunDatePath: path to the pickle file containing the last run date of a job
             xmlOutputPath: optional parameter, sets path to store downloaded xml papers
         """
-        "+OR+".join(searchQueries)
+
+        "+OR+".join(searchQueries)   # join the queries in suitable format for E-utilites url (see documentation for more info)
+
         # if no output path provided use object's xml path
         if xmlOutputPath is None:
             xmlOutputPath = self.xmlPath
