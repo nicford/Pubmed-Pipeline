@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "    Pubmed_Pipeline  Copyright (C) 2020  Nicolas Ford, Paul Lorthongpaisarn, Yalman Ahadi
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions. (see license)"
+
 # E-utilities documentation: https://www.ncbi.nlm.nih.gov/books/NBK25501/
 
 # make logs directory and file

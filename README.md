@@ -87,10 +87,10 @@ sparkSession = SparkSession.builder \    # your Spark session configuration
                        .config("spark.some.config.option", "some-value") \
                        .getOrCreate()
 
-# The call below sets the pipeline up 
+# create the setup pipeline 
 setupJob = PubmedPipelineSetup(sparkSession, XMLFilesDirectory, classifierPath, dataframeOutputPath, numSlices, lastRunDatePath)
 
-# This downloads all the required papers from pubmed under the searchQueries
+# This downloads all the required papers from PubMed under the searchQueries
 setupJob.downloadXmlFromPubmed(searchQueries, apiKey)
 
 # This runs the pipeline and saves the classified papers in dataframeOutputPath
@@ -106,33 +106,67 @@ See below how to use this update pipeline.
 ```python
 from pubmed_pipeline import PubmedPipelineUpdate
 
-XMLFilesDirectory = ""     # path to save downloaded xml content from pubmed
-numSlices = ""             # The numSlices denote the number of partitions the data would be parallelized to
-searchQueries = [""]       # list of strings for queries to search pubmed for
-apiKey = ""                # API key from pubmed to allow increased rate of requests, to avoid HTTP 429 error(see E-utilites website for how to get a key) 
-lastRunDatePath = ""       # path containing a pickle object of the last run date (running setup job creates one)
-classifierPath = ""        # path to the classifier used to classify papers
-dataframeOutputPath = ""   # path to store the final dataframe to in parquet form
+XMLFilesDirectory = ""          # path to save downloaded xml content from pubmed
+numSlices = ""                  # The numSlices denote the number of partitions the data would be parallelized to
+searchQueries = [""]            # list of strings for queries to search pubmed for
+apiKey = ""                     # API key from pubmed to allow increased rate of requests, to avoid HTTP 429 error(see E-utilites website for how to get a key) 
+lastRunDatePath = ""            # path containing a pickle object of the last run date (running setup job creates one)
+classifierPath = ""             # path to the classifier used to classify papers
+dataframeOutputPath = ""        # path to store the final dataframe to in parquet form
+newAndUpdatedPapersPath = ""    # path to store the dataframe containing the new and updated papers
 sparkSession = SparkSession.builder \    # your Spark session configuration
                        .master("local") \
                        .appName("") \
                        .config("spark.some.config.option", "some-value") \
                        .getOrCreate()
 
-# The call below sets the pipeline up 
-updateJob = PubmedPipelineSetup(sparkSession, XMLFilesDirectory, classifierPath, dataframeOutputPath, numSlices, lastRunDatePath)
+# create the update pipeline 
+updateJob = PubmedPipelineUpdate(sparkSession, XMLFilesDirectory, classifierPath, dataframeOutputPath, numSlices, lastRunDatePath, newAndUpdatedPapersPath)
 
 # This downloads all the required papers from pubmed under the searchQueries
 updateJob.downloadXmlFromPubmed(searchQueries, apiKey)
 
-# This runs the pipeline and saves the classified papers in dataframeOutputPath
-# The update class handles the logic to add new papers and remove any papers which are no longer relevant due to any modifications
+# This runs the pipeline and saves the new and updated classified papers in newAndUpdatedPapersPath
+# The pipeline also handles the logic to add new papers and remove any papers from the main dataframe which are no longer relevant
 updateJob.runPipeline()
 ```
+
 
 ## Customisation of library
 
 If you wish to customise the library to meet your own needs, please fork the repository and do the following:
 
 To customise the pipeline processes, change/add the functions in pubmedPipeline.py
-To customise the downloading of XML metadata, change setupPipeline.sh and updatePipeline.sh.
+To customise the downloading of XML metadata, change setupPipeline.sh and updatePipeline.sh
+
+
+## Core Developers
+
+[Nicolas Ford](https://github.com/nicford)
+[Yalman Ahadi](https://github.com/yalmanahadi)
+[Paul Lorthongpaisarn](https://github.com/pongpol21)
+
+
+## Dependencies
+
+We would like to acknowledge the following projects:
+
+[parallel](https://www.gnu.org/software/parallel/)
+[xmlstarlet](http://xmlstar.sourceforge.net/download.php)
+[wget](https://www.gnu.org/software/wget/)
+[curl](https://curl.haxx.se/download.html)
+
+and the following libraries:
+[pyspark](https://spark.apache.org/docs/latest/api/python/index.html)
+[joblib](https://joblib.readthedocs.io/en/latest/)
+[nltk](https://www.nltk.org)
+[numpy](https://numpy.org)
+[pandas](https://pandas.pydata.org)
+[pyarrow](https://pypi.org/project/pyarrow/)
+[requests](https://requests.readthedocs.io/en/master/)
+[scikit-learn](https://scikit-learn.org/stable/)
+[scispacy](https://allenai.github.io/scispacy/)
+[spacy](https://spacy.io)
+[unidecode](https://pypi.org/project/Unidecode/)
+[xgboost](https://xgboost.readthedocs.io/en/latest/#)
+[pubmed_parser](https://github.com/titipata/pubmed_parser)
