@@ -30,7 +30,7 @@ If you do not have git installed, follow [these](https://git-scm.com/downloads) 
 git clone https://github.com/nicford/Pubmed-Pipline.git
 ```
 
-2. In your terminal, navigated into the cloned/downloaded folder.
+2. In your terminal, navigate into the cloned/downloaded folder.
    Run the following command to install the Pubmed Pipeline library:
 
 ```bash
@@ -41,30 +41,51 @@ pip install pubmed_pipeline
 3. Install other required dependencies:
 
     Follow [these](https://www.gnu.org/software/parallel/) instructions to install parallel.
+
     Follow [these](http://xmlstar.sourceforge.net/download.php) instructions to install xmlstarlet.
+
     Follow [these](https://www.gnu.org/software/wget/) instructions to install wget.
+
     Follow [these](https://curl.haxx.se/download.html) instructions to install curl.
 
 
 
 ## Usage
+
+## Requirements
+
+### 1. Spark Session
+
+To create a pipeline object, you need to pass a spark session. Thus, you must configure your spark session beforehand. If you are unfamiliar with spark sessions, you can get started [here](https://spark.apache.org/docs/2.1.0/api/python/pyspark.sql.html?highlight=sparksession). Note: if you are using Databricks, a spark session is automatically created called "spark".
+
+### 2. API KEY (optional, for XML downloads)
+
+If you do not have your own PubMed XML data and you wish to download XML paper data from PubMed, you need a PubMed API key. This API key be obtained by doing the following:
+
+"Users can obtain an API key now from the Settings page of their NCBI account. To create an account, visit http://www.ncbi.nlm.nih.gov/account/." 
+
+
 ### Setup Pipeline
 
 The setup pipeline class allows you to setup a pipeline.
 
-Below shows a general use of this pipeline for setup
+See below how to use this setup pipeline.
 
 ```python
 from pubmed_pipeline import PubmedPipelineSetup
 
-XMLFilesDirectory = ""     # path to save downloaded xml content from pubmed
+XMLFilesDirectory = ""     # path to save downloaded XML content from pubmed or path to XML data if you already have some
 numSlices = ""             # The numSlices denote the number of partitions the data would be parallelized to
 searchQueries = [""]       # list of strings for queries to search pubmed for
 apiKey = ""                # API key from pubmed to allow increased rate of requests, to avoid HTTP 429 error(see E-utilites website for how to get a key) 
 lastRunDatePath = ""       # path to store a pickle object of the date when the setup is run (this is the same path to provide to the update job)
 classifierPath = ""        # path to the classifier used to classify papers
 dataframeOutputPath = ""   # path to store the final dataframe to in parquet form
-sparkSession = ""          # your Spark session configuration
+sparkSession = SparkSession.builder \    # your Spark session configuration
+                       .master("local") \
+                       .appName("") \
+                       .config("spark.some.config.option", "some-value") \
+                       .getOrCreate()
 
 # The call below sets the pipeline up 
 setupJob = PubmedPipelineSetup(sparkSession, XMLFilesDirectory, classifierPath, dataframeOutputPath, numSlices, lastRunDatePath)
@@ -78,9 +99,9 @@ setupJob.runPipeline()
 
 ### Update Pipeline
 
-The update pipeline class allows you to update your database of papers since the setup was run, or since the last update was run.
+The update pipeline class allows you to update your database of papers since the setup pipeline was run, or since the last update was run.
 
-Below shows a general use of this pipeline for setup
+See below how to use this update pipeline.
 
 ```python
 from pubmed_pipeline import PubmedPipelineUpdate
@@ -92,7 +113,11 @@ apiKey = ""                # API key from pubmed to allow increased rate of requ
 lastRunDatePath = ""       # path containing a pickle object of the last run date (running setup job creates one)
 classifierPath = ""        # path to the classifier used to classify papers
 dataframeOutputPath = ""   # path to store the final dataframe to in parquet form
-sparkSession = ""          # your Spark session configuration
+sparkSession = SparkSession.builder \    # your Spark session configuration
+                       .master("local") \
+                       .appName("") \
+                       .config("spark.some.config.option", "some-value") \
+                       .getOrCreate()
 
 # The call below sets the pipeline up 
 updateJob = PubmedPipelineSetup(sparkSession, XMLFilesDirectory, classifierPath, dataframeOutputPath, numSlices, lastRunDatePath)
@@ -107,7 +132,7 @@ updateJob.runPipeline()
 
 ## Customisation of library
 
-If you wish to customise the library to meet your own needs, please fork the repository to do the following:
+If you wish to customise the library to meet your own needs, please fork the repository and do the following:
 
-To customise the pipeline processes, change the functions in pubmedPipeline.py
+To customise the pipeline processes, change/add the functions in pubmedPipeline.py
 To customise the downloading of XML metadata, change setupPipeline.sh and updatePipeline.sh.
