@@ -23,7 +23,7 @@
 
 Make sure you have python and pip installed.
 
-If you do not have git installed, follow [these](https://git-scm.com/downloads) instruction to download it.
+If you do not have git installed, follow [these](https://git-scm.com/downloads) instruction to install it.
 
 1. Clone this repository (or alternatively download it directly from the github page):
 ```bash
@@ -164,6 +164,7 @@ We would like to acknowledge the following projects:
 [wget](https://www.gnu.org/software/wget/)
 
 [curl](https://curl.haxx.se/download.html)
+
 
 
 and the following libraries:
