@@ -23,7 +23,7 @@
 
 Make sure you have python and pip installed.
 
-If you do not have git installed, follow [these](https://git-scm.com/downloads) instruction to install it.
+If you do not have git installed, follow [these](https://git-scm.com/downloads) instructions to install it.
 
 1. Clone this repository (or alternatively download it directly from the github page):
 ```bash
@@ -157,40 +157,40 @@ To customise the downloading of XML metadata, change setupPipeline.sh and update
 
 We would like to acknowledge the following projects:
 
-[parallel](https://www.gnu.org/software/parallel/)
+        [parallel](https://www.gnu.org/software/parallel/)
 
-[xmlstarlet](http://xmlstar.sourceforge.net/download.php)
+        [xmlstarlet](http://xmlstar.sourceforge.net/download.php)
 
-[wget](https://www.gnu.org/software/wget/)
+        [wget](https://www.gnu.org/software/wget/)
 
-[curl](https://curl.haxx.se/download.html)
+        [curl](https://curl.haxx.se/download.html)
 
 
 
 and the following libraries:
 
-[pyspark](https://spark.apache.org/docs/latest/api/python/index.html)
+        [pyspark](https://spark.apache.org/docs/latest/api/python/index.html)
 
-[joblib](https://joblib.readthedocs.io/en/latest/)
+        [joblib](https://joblib.readthedocs.io/en/latest/)
 
-[nltk](https://www.nltk.org)
+        [nltk](https://www.nltk.org)
 
-[numpy](https://numpy.org)
+        [numpy](https://numpy.org)
 
-[pandas](https://pandas.pydata.org)
+        [pandas](https://pandas.pydata.org)
 
-[pyarrow](https://pypi.org/project/pyarrow/)
+        [pyarrow](https://pypi.org/project/pyarrow/)
 
-[requests](https://requests.readthedocs.io/en/master/)
+        [requests](https://requests.readthedocs.io/en/master/)
 
-[scikit-learn](https://scikit-learn.org/stable/)
+        [scikit-learn](https://scikit-learn.org/stable/)
 
-[scispacy](https://allenai.github.io/scispacy/)
+        [scispacy](https://allenai.github.io/scispacy/)
 
-[spacy](https://spacy.io)
+        [spacy](https://spacy.io)
 
-[unidecode](https://pypi.org/project/Unidecode/)
+        [unidecode](https://pypi.org/project/Unidecode/)
 
-[xgboost](https://xgboost.readthedocs.io/en/latest/#)
+        [xgboost](https://xgboost.readthedocs.io/en/latest/#)
 
-[pubmed_parser](https://github.com/titipata/pubmed_parser)
+        [pubmed_parser](https://github.com/titipata/pubmed_parser)
