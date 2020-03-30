@@ -81,7 +81,9 @@ apiKey = ""                # API key from pubmed to allow increased rate of requ
 lastRunDatePath = ""       # path to store a pickle object of the date when the setup is run (this is the same path to provide to the update job)
 classifierPath = ""        # path to the classifier used to classify papers
 dataframeOutputPath = ""   # path to store the final dataframe to in parquet form
-sparkSession = SparkSession.builder \    # your Spark session configuration
+
+# your Spark session configuration
+sparkSession = SparkSession.builder \    
                        .master("local") \
                        .appName("") \
                        .config("spark.some.config.option", "some-value") \
@@ -114,7 +116,9 @@ lastRunDatePath = ""            # path containing a pickle object of the last ru
 classifierPath = ""             # path to the classifier used to classify papers
 dataframeOutputPath = ""        # path to store the final dataframe to in parquet form
 newAndUpdatedPapersPath = ""    # path to store the dataframe containing the new and updated papers
-sparkSession = SparkSession.builder \    # your Spark session configuration
+
+# your Spark session configuration
+sparkSession = SparkSession.builder \
                        .master("local") \
                        .appName("") \
                        .config("spark.some.config.option", "some-value") \
@@ -143,7 +147,9 @@ To customise the downloading of XML metadata, change setupPipeline.sh and update
 ## Core Developers
 
 [Nicolas Ford](https://github.com/nicford)
+
 [Yalman Ahadi](https://github.com/yalmanahadi)
+
 [Paul Lorthongpaisarn](https://github.com/pongpol21)
 
 
@@ -152,21 +158,38 @@ To customise the downloading of XML metadata, change setupPipeline.sh and update
 We would like to acknowledge the following projects:
 
 [parallel](https://www.gnu.org/software/parallel/)
+
 [xmlstarlet](http://xmlstar.sourceforge.net/download.php)
+
 [wget](https://www.gnu.org/software/wget/)
+
 [curl](https://curl.haxx.se/download.html)
 
+
 and the following libraries:
+
 [pyspark](https://spark.apache.org/docs/latest/api/python/index.html)
+
 [joblib](https://joblib.readthedocs.io/en/latest/)
+
 [nltk](https://www.nltk.org)
+
 [numpy](https://numpy.org)
+
 [pandas](https://pandas.pydata.org)
+
 [pyarrow](https://pypi.org/project/pyarrow/)
+
 [requests](https://requests.readthedocs.io/en/master/)
+
 [scikit-learn](https://scikit-learn.org/stable/)
+
 [scispacy](https://allenai.github.io/scispacy/)
+
 [spacy](https://spacy.io)
+
 [unidecode](https://pypi.org/project/Unidecode/)
+
 [xgboost](https://xgboost.readthedocs.io/en/latest/#)
+
 [pubmed_parser](https://github.com/titipata/pubmed_parser)
