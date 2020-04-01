@@ -27,7 +27,7 @@ If you do not have git installed, follow [these](https://git-scm.com/downloads) 
 
 1. Clone this repository (or alternatively download it directly from the github page):
 ```bash
-git clone https://github.com/nicford/Pubmed-Pipline.git
+git clone https://github.com/nicford/Pubmed-Pipeline.git
 ```
 
 2. In your terminal, navigate into the cloned/downloaded folder.
