@@ -56,18 +56,18 @@ pip install pubmed_pipeline
 
 ### 1. Spark Session
 
-To create a pipeline object, you need to pass a spark session. Thus, you must configure your spark session beforehand. If you are unfamiliar with spark sessions, you can get started [here](https://spark.apache.org/docs/2.1.0/api/python/pyspark.sql.html?highlight=sparksession). Note: if you are using Databricks, a spark session is automatically created called "spark".
+To create a pipeline object, you need to pass in a spark session. Thus, you must configure your spark session beforehand. If you are unfamiliar with spark sessions, you can get started [here](https://spark.apache.org/docs/2.1.0/api/python/pyspark.sql.html?highlight=sparksession). Note: if you are using Databricks, a spark session is automatically created called "spark".
 
 ### 2. API KEY (optional, for XML downloads)
 
-If you do not have your own PubMed XML data and you wish to download XML paper data from PubMed, you need a PubMed API key. This API key be obtained by doing the following:
+If you do not have your own PubMed XML data and you wish to download XML paper data from PubMed, you need a PubMed API key. This API key can be obtained by doing the following:
 
 "Users can obtain an API key now from the Settings page of their NCBI account. To create an account, visit http://www.ncbi.nlm.nih.gov/account/." 
 
 
 ### Setup Pipeline
 
-The setup pipeline class allows you to setup a pipeline.
+The setup pipeline class allows you to create a pipeline.
 
 See below how to use this setup pipeline.
 
