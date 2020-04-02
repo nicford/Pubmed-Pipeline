@@ -234,11 +234,13 @@ class PubmedPipelineUpdate(PubmedPipeline):
         today = datetime.date.today()
 
         # days since last run
-        reldate = (today - lastRunDate).days + 1    # increment by 1 to avoid timezone issues. Note: papers already in the main dataframe will not be duplicated
+        reldate = (today - lastRunDate).days    # increment by 1 to avoid timezone issues. Note: papers already in the main dataframe will not be duplicated
 
         # PubMed only gets updated once daily, thus pipeline cannot be run more than once daily since there will be no new/changed papers.
         if reldate < 1:
             raise Exception("Days since last pipeline run is less than 1. Pipeline runs must occur at least one day apart")
+
+        reldate += 1
 
         subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQueries, str(apiKey), str(reldate)])
 
