@@ -1,5 +1,15 @@
 # Pubmed Pipeline Python Library
 
+## Overview
+This library allows for the easy creation of a machine learning pipeline that uses PubMed as its data source.
+Two kinds of pipelines can be made:
+
+
+**Setup Pipeline**: Downloads all the papers from PubMed matching a specific search query and then applies a machine learning classifier to them before saving the output in parquet format
+
+
+**Update pipeline**: handles the logic of downloading all the new and updated papers since the setup pipeline or the last update pipeline ran. The new and updated papers retrieved from PubMed are added to the main dataframe created in the setup pipeline as well as being stored in a separate dataframe which is written in parquet format.
+
 ## Requirements
 
 [python3+](https://www.python.org/downloads/)
