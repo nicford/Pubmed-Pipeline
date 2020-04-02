@@ -157,7 +157,7 @@ To customise the downloading of XML metadata, change setupPipeline.sh and update
 
 We would like to acknowledge the following projects:
 
-* [*parallel](https://www.gnu.org/software/parallel/)
+* [parallel](https://www.gnu.org/software/parallel/)
 
 * [xmlstarlet](http://xmlstar.sourceforge.net/download.php)
 
