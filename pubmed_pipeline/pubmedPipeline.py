@@ -172,13 +172,15 @@ class PubmedPipelineSetup(PubmedPipeline):
             xmlOutputPath: optional parameter, sets path to store downloaded xml papers
         """
         
-        "+OR+".join(searchQueries)    # join the queries in suitable format for E-utilites url (see documentation for more info)
+        searchQueries = "+OR+".join(searchQueries)    # join the queries in suitable format for E-utilites url (see documentation for more info)
 
         # if no output path provided use object's xml path
         if xmlOutputPath is None:
             xmlOutputPath = self.xmlPath
 
         subprocess.call(["setupPipeline.sh", xmlOutputPath, searchQueries, str(apiKey)])
+
+        self.saveLastRunDate()      # store today as the last run date
 
 
 
@@ -187,13 +189,11 @@ class PubmedPipelineSetup(PubmedPipeline):
         Run the pipeline.
         Note: only run if you have xml data in the xmlPath. If you do not, you can use downloadXmlFromPubmed() to download xml data (see function)
         """
-        dataframe = self.parseXMLToDF(self.xmlPath, self.numSlices)
+        dataframe = self.parseXMLToDF()
         dataframe = self.preProcessDataframe(dataframe)                    
         dataframe = self.applyClassifier(dataframe)                    
 
         dataframe.write.parquet(self.mainDataframeOutputPath, mode="overwrite")     # write dataframe to specified directory in parquet format
-
-        self.saveLastRunDate()      # store today as the last run date
 
 
 
@@ -222,7 +222,7 @@ class PubmedPipelineUpdate(PubmedPipeline):
             xmlOutputPath: optional parameter, sets path to store downloaded xml papers
         """
 
-        "+OR+".join(searchQueries)   # join the queries in suitable format for E-utilites url (see documentation for more info)
+        searchQueries = "+OR+".join(searchQueries)   # join the queries in suitable format for E-utilites url (see documentation for more info)
 
         # if no output path provided use object's xml path
         if xmlOutputPath is None:
@@ -240,7 +240,10 @@ class PubmedPipelineUpdate(PubmedPipeline):
         if reldate < 1:
             raise Exception("Days since last pipeline run is less than 1. Pipeline runs must occur at least one day apart")
 
-        subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQuery, str(apiKey), str(reldate)])
+        subprocess.call(["updatePipeline.sh", xmlOutputPath, searchQueries, str(apiKey), str(reldate)])
+
+        # save today as last run date
+        self.saveLastRunDate()
 
     
     def runPipeline(self):
@@ -250,7 +253,7 @@ class PubmedPipelineUpdate(PubmedPipeline):
 
         """
         # parse xml files into dataframe
-        newPapersDataframe = self.parseXMLToDF(self.xmlPath, self.numSlices)
+        newPapersDataframe = self.parseXMLToDF()
 
         # pre-process dataframe
         newPapersDataframe = self.preProcessDataframe(newPapersDataframe)
@@ -271,8 +274,7 @@ class PubmedPipelineUpdate(PubmedPipeline):
         # write new and updated papers dataframe in parquet format
         newPapersDataframe.write.parquet(self.newAndUpdatedPapersDataframeOutputPath, mode='overwrite')
 
-        # save today as last run date
-        self.saveLastRunDate()
+        
 
 
 
