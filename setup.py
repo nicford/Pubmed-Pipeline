@@ -12,7 +12,7 @@ setuptools.setup(
     description='A PubMed Pipeline package',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    #url='https://github.com/greenfrogs/FHIR-Parser',
+    url='https://github.com/nicford/Pubmed-Pipeline',
     license='MIT',
     install_requires=['pyspark==2.4.4', 'joblib==0.14.1', 'nltk==3.4.5', 'numpy==1.18.1', 'pandas==1.0.1', 'pyarrow==0.11', 'requests==2.23.0',
     'scikit-learn==0.22.1', 'scispacy==0.2.4', 'spacy==2.2.3', 'unidecode==1.1.1', 'xgboost==0.90', 'pubmed_parser @ git+git://github.com/titipata/pubmed_parser.git@40d361a756a29cd943a54313c09b95044767eb97'],
